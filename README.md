@@ -13,6 +13,10 @@ The interface is a deliberate love letter to Windows 98/XP: beveled buttons, eng
 group boxes, segmented progress bars, a gradient title bar, and a PictoChat-style frame
 around the text you are about to type.
 
+**Download:** grab `MonkeyLearn.exe` from the
+[latest release](https://github.com/MemoryHazy313/MonkeyLearn/releases/latest) -
+no install, starts with an empty bookshelf.
+
 ![Library view](docs/library.png)
 
 ![Bookshelf](docs/shelf.png)
@@ -43,7 +47,9 @@ Tip: MonkeyType's custom text editor can also **save** a text under a name (the
 "saved texts" list). Saving a chapter there is handy when you want to retype it
 for speed later without touching your reading position in MonkeyLearn.
 
-Skip moves past a passage without counting it; Done is what records progress.
+Note: **Skip**, **Back**, and the Left/Right arrow keys only move you around -
+they never count as progress. Only **Done, next** (or Enter) records a passage
+as typed.
 
 Shortcuts on the passage view: `C` copy again, `Enter` done + next, Left/Right
 back/skip, Up/Down and PgUp/PgDn scroll the text, `Esc` contents.
