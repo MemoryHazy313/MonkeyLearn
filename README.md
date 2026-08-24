@@ -127,9 +127,6 @@ MIT - see [LICENSE](LICENSE). Theme palettes belong to the
 contributors. MonkeyLearn is an independent companion tool, not affiliated with
 MonkeyType.
 
-## Roadmap
+---
 
-This README grows with the project.
-
-- [ ] Packaged releases
-- [ ] Verify and polish Linux support (currently untested)
+Developed with the help of Claude, Anthropic's AI coding assistant.
