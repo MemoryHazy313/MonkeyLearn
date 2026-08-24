@@ -84,7 +84,7 @@ Requires Python 3.12+ on Windows with WebView2 (preinstalled on Windows 11).
 pip install pywebview pyperclip pypdf pyinstaller
 cd typing/app
 python main.py             # run from source
-pyinstaller --noconfirm --onefile --windowed --add-data "ui.html;." -n MonkeyLearn main.py
+pyinstaller --noconfirm --onefile --windowed --add-data "ui.html;." --icon monkeylearn.ico -n MonkeyLearn main.py
 ```
 
 No book text ships in this repository, and none is needed: the app starts with an

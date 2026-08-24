@@ -46,7 +46,7 @@ Sources are in `typing/app/` (`main.py`, `ui.html`, `make_data.py`).
 python typing/app/make_data.py
 cd typing/app
 python -m PyInstaller --noconfirm --onefile --windowed ^
-    --add-data "ui.html;." --add-data "data.json;." -n MonkeyLearn main.py
+    --add-data "ui.html;." --add-data "data.json;." --icon monkeylearn.ico -n MonkeyLearn main.py
 copy dist\MonkeyLearn.exe ..\..\MonkeyLearn.exe
 ```
 
