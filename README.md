@@ -80,6 +80,16 @@ Note: no book text ships in this repository. `make_data.py` generates the bundle
 starter book from an EPUB you place in the repository root; any books you actually
 read are imported through the app's own **Add Book...** dialog.
 
+## Themes
+
+The Appearance section on the shelf offers four classic Windows schemes (Luna Blue,
+Olive Green, Silver, and Midnight - a dark mode) plus a dropdown of 141 palettes from
+[MonkeyType's official themes](https://github.com/monkeytypegame/monkeytype), each one
+re-derived into the full retro widget system (bevels, title bar, selection, progress
+blocks) from its core colors. Themes with too little contrast for a dense 11px UI are
+filtered out at build time. Theme palettes are the work of the MonkeyType project and
+its contributors.
+
 ## Running on Linux
 
 The code is portable (config lives in `~/.config/MonkeyLearn` on Linux,
