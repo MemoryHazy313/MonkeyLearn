@@ -1,4 +1,4 @@
-"""Generic book importers for Copywork: EPUB and plain text.
+"""Generic book importers for MonkeyLearn: EPUB and plain text.
 
 Produces the same shape as the bundled data.json:
 {id, title, edition, chapters:[{n,title,pw,cw}], blocks:[{k,l?,c,t}]}

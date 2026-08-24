@@ -43,7 +43,7 @@ def probe(window):
 
 with open(appmod.res_path("ui.html"), encoding="utf-8") as f:
     html = f.read()
-appmod.window = webview.create_window("Copywork", html=html, js_api=appmod.Api(),
+appmod.window = webview.create_window("MonkeyLearn", html=html, js_api=appmod.Api(),
                                       width=1000, height=800, background_color="#ECE9D8", frameless=True, easy_drag=False, on_top=True)
 webview.start(probe, appmod.window)
 

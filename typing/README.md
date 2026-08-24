@@ -1,15 +1,15 @@
-# Copywork - typing through books on MonkeyType
+# MonkeyLearn - typing through books on MonkeyType
 
-The app is `Copywork.exe` in the book folder. Double-click it, no terminal needed.
+The app is `MonkeyLearn.exe` in the book folder. Double-click it, no terminal needed.
 It holds your books, hands you passages, and keeps a bookmark per book; the
 typing itself happens on the official monkeytype.com.
 
 Python Crash Course is built in. **Add a book** on the shelf screen imports any
-EPUB or TXT file (parsed locally, stored in `%APPDATA%\Copywork\books`).
+EPUB or TXT file (parsed locally, stored in `%APPDATA%\MonkeyLearn\books`).
 
 ## Using it
 
-1. Open `Copywork.exe`. Press **Continue** (auto-copies the current passage).
+1. Open `MonkeyLearn.exe`. Press **Continue** (auto-copies the current passage).
 2. On monkeytype.com: mode `custom` -> wrench icon -> paste -> uncheck **random**,
    word count `all` -> save. Type it.
 3. Back in the app, click **Done, next** (or press Enter) - progress is recorded
@@ -35,7 +35,7 @@ chapter row to jump there.
 Shortcuts on the passage view: `C` copy, `Enter` done + next,
 arrow keys back/skip, `Esc` contents.
 
-Progress lives in `%APPDATA%\Copywork\state.json` - it survives moving or
+Progress lives in `%APPDATA%\MonkeyLearn\state.json` - it survives moving or
 rebuilding the exe. Delete that file to start over.
 
 ## Rebuilding the app (only after changing its code)
@@ -46,8 +46,8 @@ Sources are in `typing/app/` (`main.py`, `ui.html`, `make_data.py`).
 python typing/app/make_data.py
 cd typing/app
 python -m PyInstaller --noconfirm --onefile --windowed ^
-    --add-data "ui.html;." --add-data "data.json;." -n Copywork main.py
-copy dist\Copywork.exe ..\..\Copywork.exe
+    --add-data "ui.html;." --add-data "data.json;." -n MonkeyLearn main.py
+copy dist\MonkeyLearn.exe ..\..\MonkeyLearn.exe
 ```
 
 Needs `pip install pywebview pyperclip pyinstaller` (already installed).

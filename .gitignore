@@ -5,7 +5,7 @@ typing/app/data.json
 typing/out/
 
 # Build artifacts and packaged app
-Copywork.exe
+MonkeyLearn.exe
 typing/app/build/
 typing/app/dist/
 typing/app/*.spec

@@ -1,4 +1,4 @@
-"""Parse the EPUB into data.json for the Copywork desktop app.
+"""Parse the EPUB into data.json for the MonkeyLearn desktop app.
 
 Reuses the parser from typing/build.py; emits one ordered stream of blocks
 (headings, prose, code) plus chapter metadata.

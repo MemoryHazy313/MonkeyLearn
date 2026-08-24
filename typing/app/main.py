@@ -1,7 +1,7 @@
-"""Copywork - desktop companion for typing books on MonkeyType.
+"""MonkeyLearn - desktop companion for typing books on MonkeyType.
 
 Serves the bundled ui.html in a WebView2 window, feeds passages to the
-clipboard, imports EPUB/TXT books, and keeps progress in %APPDATA%/Copywork.
+clipboard, imports EPUB/TXT books, and keeps progress in %APPDATA%/MonkeyLearn.
 """
 import json
 import os
@@ -21,10 +21,18 @@ def res_path(name):
     return os.path.join(base, name)
 
 
-APP_DIR = os.path.join(os.environ.get("APPDATA", os.path.expanduser("~")),
-                       "Copywork")
+_APPDATA = os.environ.get("APPDATA", os.path.expanduser("~"))
+APP_DIR = os.path.join(_APPDATA, "MonkeyLearn")
 STATE_FILE = os.path.join(APP_DIR, "state.json")
 BOOKS_DIR = os.path.join(APP_DIR, "books")
+
+# the app was previously named Copywork - carry existing progress over once
+_OLD_DIR = os.path.join(_APPDATA, "Copywork")
+if os.path.isdir(_OLD_DIR) and not os.path.isdir(APP_DIR):
+    try:
+        os.rename(_OLD_DIR, APP_DIR)
+    except OSError:
+        pass
 
 window = None
 maximized = False
@@ -161,7 +169,7 @@ def main():
     with open(res_path("ui.html"), encoding="utf-8") as f:
         html = f.read()
     window = webview.create_window(
-        "Copywork", html=html, js_api=Api(),
+        "MonkeyLearn", html=html, js_api=Api(),
         width=1000, height=800, min_size=(700, 540),
         background_color="#ECE9D8",
         frameless=True, easy_drag=False,
