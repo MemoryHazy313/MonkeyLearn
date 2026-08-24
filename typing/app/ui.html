@@ -68,6 +68,8 @@ button{font:inherit; cursor:default; color:inherit}
   padding:5px 14px; min-width:75px; font-size:11px;
 }
 .btn:active{box-shadow:var(--pressed); padding:6px 13px 4px 15px}
+.btn.smallbtn{min-width:0; padding:4px 12px}
+.btn.smallbtn:active{padding:5px 11px 3px 13px}
 .btn:disabled{color:var(--disabled); text-shadow:1px 1px 0 var(--hilite)}
 .btn:focus-visible{outline:1px dotted var(--text); outline-offset:-5px}
 .btn.default{outline:1px solid var(--accent); outline-offset:-1px}
@@ -299,6 +301,7 @@ kbd{
     <div class="listview books" id="shelf-list"></div>
     <div class="fieldrow" style="margin-top:8px">
       <button class="btn" id="btn-add">Add Book...</button>
+      <button class="btn hidden" id="btn-restore">Restore starter book</button>
       <span class="hinttext">EPUB, PDF, or TXT. PDFs import less cleanly - prefer EPUB when you have both.</span>
     </div>
     <p class="importmsg hidden" id="importmsg"></p>
@@ -310,6 +313,7 @@ kbd{
         <div class="fieldrow">
           <span style="padding-right:6px">Find:</span>
           <input type="text" id="theme-search" placeholder="type to filter" style="width:180px">
+          <button class="btn smallbtn" id="btn-shuffle">Random</button>
         </div>
         <div class="listview themelist" id="theme-list" tabindex="0"></div>
       </div>
@@ -317,6 +321,7 @@ kbd{
         <div class="fieldrow">
           <span style="padding-right:6px">Favorites:</span>
           <input type="text" id="fav-search" placeholder="type to filter" style="width:150px">
+          <button class="btn smallbtn" id="btn-fav-shuffle">Random</button>
         </div>
         <div class="listview themelist" id="fav-list" tabindex="0"></div>
       </div>
@@ -524,7 +529,9 @@ function renderShelf(){
   head.className = "lvhead";
   head.innerHTML = "<span>Title</span><span>Size</span><span>Progress</span><span>%</span><span></span>";
   list.appendChild(head);
-  BOOKS.forEach(meta=>{
+  S.hiddenBooks = S.hiddenBooks || [];
+  $("btn-restore").classList.toggle("hidden", !S.hiddenBooks.length);
+  BOOKS.filter(meta=>!S.hiddenBooks.includes(meta.id)).forEach(meta=>{
     const pct = bookProgress(meta);
     const row = document.createElement("div");
     row.className = "lvrow";
@@ -538,14 +545,20 @@ function renderShelf(){
       meta.chapters+" chapters, "+meta.words.toLocaleString()+" words";
     const del = document.createElement("button");
     del.className = "del";
-    del.innerHTML = meta.builtin ? "" : "&#215;";
+    del.innerHTML = "&#215;";
     del.title = "Remove book";
-    if(!meta.builtin) del.addEventListener("click", async e=>{
+    del.addEventListener("click", async e=>{
       e.stopPropagation();
       if(!confirm('Remove "'+meta.title+'" and its progress?')) return;
-      await API.delete_book(meta.id);
-      delete S.books[meta.id]; save();
-      BOOKS = await API.list_books();
+      if(meta.builtin){
+        S.hiddenBooks.push(meta.id);
+      }else{
+        await API.delete_book(meta.id);
+        BOOKS = await API.list_books();
+      }
+      delete S.books[meta.id];
+      if(S.current === meta.id) S.current = null;
+      save();
       renderShelf(); updateChrome();
     });
     row.appendChild(del);
@@ -823,6 +836,13 @@ $("theme-search").addEventListener("keydown", e=>{
 });
 $("theme-search").addEventListener("input", renderThemeList);
 $("fav-search").addEventListener("input", renderThemeList);
+function shuffleFrom(items){
+  const pool = items.filter(i=>i.id !== S.theme);
+  if(!pool.length) return;
+  setTheme(pool[Math.floor(Math.random()*pool.length)].id);
+}
+$("btn-shuffle").addEventListener("click", ()=>shuffleFrom(themeFilter()));
+$("btn-fav-shuffle").addEventListener("click", ()=>shuffleFrom(favItems()));
 $("fav-search").addEventListener("keydown", e=>{
   if(e.key === "Escape"){ $("fav-search").value = ""; renderThemeList(); return; }
   favKeys(e);
@@ -847,6 +867,9 @@ function migrate(raw){
 
 /* ---------- wiring ---------- */
 $("btn-add").addEventListener("click", addBook);
+$("btn-restore").addEventListener("click", ()=>{
+  S.hiddenBooks = []; save(); renderShelf(); updateChrome();
+});
 $("tb-books").addEventListener("click", showShelf);
 $("tb-contents").addEventListener("click", showLibrary);
 $("tb-copy").addEventListener("click", copyCur);
@@ -911,6 +934,10 @@ document.addEventListener("keydown", e=>{
   else if(e.key==="c" || e.key==="C"){ e.preventDefault(); copyCur(); }
   else if(e.key==="ArrowLeft"){ e.preventDefault(); if(cur) openPassage(cur.idx-1); }
   else if(e.key==="ArrowRight"){ e.preventDefault(); if(cur) openPassage(cur.idx+1); }
+  else if(e.key==="ArrowDown"){ e.preventDefault(); $("passage").scrollBy(0, 64); }
+  else if(e.key==="ArrowUp"){ e.preventDefault(); $("passage").scrollBy(0, -64); }
+  else if(e.key==="PageDown"){ e.preventDefault(); $("passage").scrollBy(0, $("passage").clientHeight*0.9); }
+  else if(e.key==="PageUp"){ e.preventDefault(); $("passage").scrollBy(0, -$("passage").clientHeight*0.9); }
 });
 
 /* ---------- boot ---------- */

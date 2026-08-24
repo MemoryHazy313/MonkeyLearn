@@ -61,13 +61,19 @@ def _book_meta(data, builtin=False):
 
 class Api:
     def _builtin(self):
-        with open(res_path("data.json"), encoding="utf-8") as f:
-            data = json.load(f)
+        # the starter book is optional: builds from the public repo have no
+        # data.json and start with an empty shelf
+        try:
+            with open(res_path("data.json"), encoding="utf-8") as f:
+                data = json.load(f)
+        except OSError:
+            return None
         data["id"] = BUILTIN_ID
         return data
 
     def list_books(self):
-        books = [_book_meta(self._builtin(), builtin=True)]
+        builtin = self._builtin()
+        books = [_book_meta(builtin, builtin=True)] if builtin else []
         if os.path.isdir(BOOKS_DIR):
             for fn in sorted(os.listdir(BOOKS_DIR)):
                 if not fn.endswith(".json"):
@@ -81,7 +87,10 @@ class Api:
 
     def get_book(self, book_id):
         if book_id == BUILTIN_ID:
-            return self._builtin()
+            data = self._builtin()
+            if data is None:
+                raise FileNotFoundError("no bundled book in this build")
+            return data
         path = os.path.join(BOOKS_DIR, book_id + ".json")
         with open(path, encoding="utf-8") as f:
             return json.load(f)

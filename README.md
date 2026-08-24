@@ -71,14 +71,15 @@ Requires Python 3.12+ on Windows with WebView2 (preinstalled on Windows 11).
 ```
 pip install pywebview pyperclip pypdf pyinstaller
 cd typing/app
-python make_data.py        # builds the bundled starter book (see note)
 python main.py             # run from source
-pyinstaller --noconfirm --onefile --windowed --add-data "ui.html;." --add-data "data.json;." -n MonkeyLearn main.py
+pyinstaller --noconfirm --onefile --windowed --add-data "ui.html;." -n MonkeyLearn main.py
 ```
 
-Note: no book text ships in this repository. `make_data.py` generates the bundled
-starter book from an EPUB you place in the repository root; any books you actually
-read are imported through the app's own **Add Book...** dialog.
+No book text ships in this repository, and none is needed: the app starts with an
+empty shelf and you add books through **Add Book...** (EPUB, PDF, or TXT).
+Optionally, `python make_data.py` builds a bundled starter book from an EPUB you
+place in the repository root - add `--add-data "data.json;."` to the pyinstaller
+command to bake it in.
 
 ## Themes
 
@@ -111,6 +112,5 @@ the same command as the Windows build.
 
 This README grows with the project.
 
-- [ ] Make the bundled starter book optional so the app builds with an empty shelf
 - [ ] Packaged releases
 - [ ] Verify and polish Linux support (currently untested)
