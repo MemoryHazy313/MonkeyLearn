@@ -1,0 +1,18 @@
+# The book itself and anything containing its full text - never commit books
+*.epub
+*.pdf
+typing/app/data.json
+typing/out/
+
+# Build artifacts and packaged app
+Copywork.exe
+typing/app/build/
+typing/app/dist/
+typing/app/*.spec
+
+# Local user data / caches
+typing/state.json
+__pycache__/
+
+# Local Claude Code instructions - not for the repo
+CLAUDE.md

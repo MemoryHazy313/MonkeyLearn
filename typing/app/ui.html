@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Copywork</title>
+<style>
+:root{
+  --face:#ECE9D8; --face-dk:#E3DFCE;
+  --hilite:#FFFFFF; --btnface:#F1EFE2; --shadow:#ACA899; --frame:#716F64;
+  --field:#FFFFFF; --fieldborder:#7F9DB9;
+  --navy:#0A246A; --blue:#1084D0; --sel:#316AC5;
+  --green1:#8DD264; --green2:#3FA435;
+  --info:#FFFFE1; --infoborder:#B5B588;
+  --picto:#5A7EDC;
+  --ui:Tahoma,"Segoe UI",Arial,sans-serif;
+  --book:"Times New Roman",Georgia,serif;
+  --code:"Lucida Console",Consolas,monospace;
+  --raised:inset -1px -1px var(--frame), inset 1px 1px var(--hilite),
+           inset -2px -2px var(--shadow), inset 2px 2px var(--btnface);
+  --pressed:inset -1px -1px var(--hilite), inset 1px 1px var(--frame),
+            inset -2px -2px var(--btnface), inset 2px 2px var(--shadow);
+  --sunken:inset -1px -1px var(--hilite), inset 1px 1px var(--shadow);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  background:var(--face); color:#000;
+  font-family:var(--ui); font-size:11px;
+  display:flex; flex-direction:column; overflow:hidden;
+}
+button{font:inherit; cursor:default; color:inherit}
+.hidden{display:none !important}
+
+/* classic widgets */
+.btn{
+  background:var(--face); border:none; box-shadow:var(--raised);
+  padding:5px 14px; min-width:75px; font-size:11px;
+}
+.btn:active{box-shadow:var(--pressed); padding:6px 13px 4px 15px}
+.btn:disabled{color:var(--shadow); text-shadow:1px 1px 0 var(--hilite)}
+.btn:focus-visible{outline:1px dotted #000; outline-offset:-5px}
+.btn.default{outline:1px solid var(--navy); outline-offset:-1px}
+fieldset{
+  border:none; padding:12px 10px 10px;
+  box-shadow:inset -1px -1px var(--hilite), inset 1px 1px var(--shadow),
+             inset -2px -2px var(--shadow), inset 2px 2px var(--hilite);
+  margin-bottom:10px;
+}
+legend{font-size:11px; padding:0 4px; background:var(--face); color:var(--navy)}
+input[type=number]{
+  font-family:var(--ui); font-size:11px; padding:3px 4px;
+  border:1px solid var(--fieldborder); background:var(--field); width:64px;
+}
+input[type=radio]{accent-color:var(--sel)}
+.fieldrow{display:flex; align-items:center; gap:6px; padding:3px 0}
+.fieldrow label{padding-right:10px}
+.sunkencell{
+  box-shadow:var(--sunken); padding:3px 8px; background:var(--face);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.pbar{height:14px; box-shadow:var(--sunken); padding:2px; background:var(--face)}
+.pbar i{
+  display:block; height:100%;
+  background-image:linear-gradient(180deg,var(--green1),var(--green2)),
+    linear-gradient(90deg,#0000 0 6px,var(--face) 6px 8px);
+  background-blend-mode:normal;
+  background:repeating-linear-gradient(90deg,var(--green2) 0 6px,var(--face) 6px 8px);
+}
+.pbar i b{display:block;height:100%;background:linear-gradient(180deg,#0002,#0000 40%,#0000 70%,#0002)}
+
+/* classic window frame + title bar (the OS frame is disabled) */
+body{
+  padding:3px;
+  box-shadow:inset -1px -1px var(--frame), inset 1px 1px var(--btnface),
+             inset -2px -2px var(--shadow), inset 2px 2px var(--hilite);
+}
+.titlebar{
+  flex:none; height:26px; display:flex; align-items:center;
+  background:linear-gradient(90deg,var(--navy),var(--blue));
+  color:#fff; padding:2px 3px 2px 4px; gap:4px;
+}
+.titledrag{
+  flex:1; display:flex; align-items:center; gap:8px; height:100%;
+  overflow:hidden;
+}
+.appicon{
+  flex:none; width:15px; height:14px; background:var(--field);
+  border:1px solid var(--frame); border-radius:1px;
+  box-shadow:inset -4px 0 0 var(--picto);
+}
+.titledrag .logo{font-weight:bold; font-style:italic; font-size:13px; letter-spacing:.5px}
+.titledrag .tag{font-size:11px; opacity:.8; white-space:nowrap}
+.wbtn{
+  flex:none; width:22px; height:20px; background:var(--face); border:none;
+  box-shadow:var(--raised); position:relative; padding:0;
+}
+.wbtn:active{box-shadow:var(--pressed)}
+.wbtn .g-min{position:absolute; left:5px; right:5px; bottom:4px; height:2px; background:#000}
+.wbtn .g-max{position:absolute; inset:4px 4px 5px 4px;
+  border:1px solid #000; border-top-width:2px}
+.wbtn .g-close{position:absolute; inset:0; font-size:14px; line-height:19px;
+  font-family:var(--ui); font-weight:bold; color:#000}
+
+/* toolbar */
+.toolbar{
+  flex:none; display:flex; align-items:center; gap:2px; padding:3px 4px;
+  border-bottom:1px solid var(--shadow);
+  box-shadow:0 1px 0 var(--hilite) inset;
+}
+.tbtn{
+  background:none; border:1px solid transparent; padding:4px 10px; font-size:11px;
+}
+.tbtn:hover:not(:disabled){border-color:var(--fieldborder); background:#FDFBF3}
+.tbtn:active:not(:disabled){box-shadow:var(--sunken); background:var(--face-dk)}
+.tbtn:disabled{color:var(--shadow)}
+.tsep{width:1px; align-self:stretch; margin:2px 4px;
+  border-left:1px solid var(--shadow); border-right:1px solid var(--hilite)}
+.tspacer{flex:1}
+
+/* main area */
+.main{flex:1; overflow-y:auto; padding:12px 14px}
+.main::-webkit-scrollbar,.passagebox::-webkit-scrollbar,.listview::-webkit-scrollbar{width:16px}
+.main::-webkit-scrollbar-track,.passagebox::-webkit-scrollbar-track,
+.listview::-webkit-scrollbar-track{background:#F3F1E4}
+.main::-webkit-scrollbar-thumb,.passagebox::-webkit-scrollbar-thumb,
+.listview::-webkit-scrollbar-thumb{background:var(--face); box-shadow:var(--raised)}
+
+/* listviews */
+.listview{
+  background:var(--field); border:1px solid var(--fieldborder);
+  max-height:100%; overflow-y:auto;
+}
+.lvhead{
+  display:grid; gap:0; position:sticky; top:0;
+  background:var(--face); font-size:11px;
+}
+.lvhead span{box-shadow:var(--raised); padding:3px 8px}
+.lvrow{
+  display:grid; gap:0; width:100%; text-align:left; background:none; border:none;
+  font-size:11px; align-items:center;
+}
+.lvrow span{padding:4px 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.lvrow:hover{background:#E8F0FB}
+.lvrow.here{background:var(--sel); color:#fff}
+.lvrow.here legend{color:#fff}
+.books .lvhead,.books .lvrow{grid-template-columns:1fr 170px 150px 60px 40px}
+.chaps .lvhead,.chaps .lvrow{grid-template-columns:46px 1fr 150px 54px}
+.chaps .lvrow .num{text-align:right}
+.lvrow .del{background:none;border:none;font-size:11px;color:inherit;padding:2px}
+.lvrow .del:hover{color:#C00}
+.lvrow .pbar{margin:0 8px}
+
+/* stats strip */
+.stats{display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap}
+.stats .sunkencell b{font-size:11px}
+
+/* passage view */
+#desk{display:flex; flex-direction:column; height:100%}
+.pictoframe{
+  position:relative; flex:1; display:flex; flex-direction:column;
+  border:2px solid var(--picto); border-radius:10px; background:var(--field);
+  margin-top:8px; min-height:0;
+}
+.pictotab{
+  position:absolute; top:-9px; left:14px; background:var(--field);
+  border:2px solid var(--picto); border-radius:6px;
+  padding:1px 10px; font-size:11px; font-weight:bold; color:var(--navy);
+  max-width:70%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.passagebox{
+  flex:1; overflow-y:auto; padding:16px 20px 14px; min-height:0;
+  user-select:text; border-radius:0 0 8px 8px;
+}
+.passagebox p{
+  font-family:var(--book); font-size:17px; line-height:1.55; margin:0 0 10px;
+}
+.passagebox pre{
+  font-family:var(--code); font-size:13px; line-height:1.5;
+  white-space:pre-wrap; background:#F6F5EE; border:1px solid var(--face-dk);
+  padding:8px 10px; margin:0 0 10px;
+}
+.passagebox :last-child{margin-bottom:0}
+.infobar{
+  flex:none; display:flex; align-items:center; gap:8px; margin-top:8px;
+  background:var(--info); border:1px solid var(--infoborder); padding:5px 8px;
+}
+.infobar .ico{
+  flex:none; width:14px; height:14px; border-radius:8px; background:var(--sel);
+  color:#fff; font-family:var(--book); font-style:italic; font-weight:bold;
+  text-align:center; line-height:14px; font-size:11px;
+}
+.hintrow{flex:none; display:flex; gap:14px; padding:8px 2px 2px; color:#555}
+kbd{
+  font-family:var(--ui); font-size:10px; background:#DDDAC9;
+  border:1px solid var(--frame); border-radius:3px; box-shadow:0 2px 0 var(--shadow);
+  padding:1px 6px; margin-right:4px;
+}
+
+/* status bar */
+.statusbar{
+  flex:none; display:flex; gap:2px; padding:3px 0 1px 1px;
+  border-top:1px solid var(--hilite); align-items:stretch;
+}
+.statusbar .sunkencell{font-size:11px}
+.statusbar .grow{flex:1}
+.grip{
+  flex:none; width:16px; cursor:nwse-resize; align-self:stretch;
+  background:
+    linear-gradient(135deg, transparent 0 50%, var(--hilite) 50% 62.5%, var(--shadow) 62.5% 75%,
+      transparent 75% 87.5%, transparent 87.5%),
+    linear-gradient(135deg, transparent 0 25%, var(--hilite) 25% 37.5%, var(--shadow) 37.5% 50%,
+      transparent 50% 75%, var(--hilite) 75% 87.5%, var(--shadow) 87.5%);
+}
+.importmsg{margin-top:8px; color:#C00}
+@media (prefers-reduced-motion:reduce){ *{transition:none !important} }
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+  <div class="titledrag pywebview-drag-region" id="titledrag">
+    <span class="appicon"></span>
+    <span class="logo">Copywork</span>
+    <span class="tag">type your way through a book</span>
+  </div>
+  <button class="wbtn" id="win-min" title="Minimize"><span class="g-min"></span></button>
+  <button class="wbtn" id="win-max" title="Maximize"><span class="g-max"></span></button>
+  <button class="wbtn" id="win-close" title="Close"><span class="g-close">&#215;</span></button>
+</div>
+
+<div class="toolbar">
+  <button class="tbtn" id="tb-books">Books</button>
+  <button class="tbtn" id="tb-contents">Contents</button>
+  <span class="tsep"></span>
+  <button class="tbtn" id="tb-copy">Copy</button>
+  <button class="tbtn" id="tb-done">Done, next</button>
+  <span class="tsep"></span>
+  <button class="tbtn" id="tb-back">&#9668; Back</button>
+  <button class="tbtn" id="tb-skip">Skip &#9658;</button>
+  <span class="tspacer"></span>
+  <button class="tbtn" id="tb-mt">MonkeyType</button>
+</div>
+
+<div class="main" id="shelf">
+  <fieldset>
+    <legend>Bookshelf</legend>
+    <div class="listview books" id="shelf-list"></div>
+    <div class="fieldrow" style="margin-top:8px">
+      <button class="btn" id="btn-add">Add Book...</button>
+      <span style="color:#555">EPUB or TXT, parsed on this computer only</span>
+    </div>
+    <p class="importmsg hidden" id="importmsg"></p>
+  </fieldset>
+</div>
+
+<div class="main hidden" id="library">
+  <div class="stats">
+    <span class="sunkencell">Words copied: <b id="st-words">0</b></span>
+    <span class="sunkencell">Passages done: <b id="st-passages">0</b></span>
+    <span class="sunkencell">Book: <b id="st-book">0%</b></span>
+  </div>
+
+  <fieldset>
+    <legend id="book-title">Book</legend>
+    <div class="fieldrow">
+      <button class="btn default" id="btn-continue">Begin</button>
+      <span id="continue-where" style="color:#555"></span>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Passage settings</legend>
+    <div class="fieldrow" id="len-radios">
+      <input type="radio" name="len" id="len-short" value="short"><label for="len-short">Short (60)</label>
+      <input type="radio" name="len" id="len-medium" value="medium"><label for="len-medium">Medium (150)</label>
+      <input type="radio" name="len" id="len-long" value="long"><label for="len-long">Long (300)</label>
+      <input type="radio" name="len" id="len-xl" value="xl"><label for="len-xl">XL (600)</label>
+      <input type="radio" name="len" id="len-chapter" value="chapter"><label for="len-chapter">Whole chapter</label>
+      <input type="radio" name="len" id="len-custom" value="custom"><label for="len-custom">Custom:</label>
+      <input type="number" id="customlen" min="30" max="100000" step="50" placeholder="500">
+      <span>words</span>
+    </div>
+    <div class="fieldrow" id="pref-mode">
+      <span style="padding-right:6px">Content:</span>
+      <input type="radio" name="mode" id="mode-prose" value="prose"><label for="mode-prose">Prose</label>
+      <input type="radio" name="mode" id="mode-code" value="code"><label for="mode-code">Code</label>
+      <input type="radio" name="mode" id="mode-both" value="both"><label for="mode-both">Everything</label>
+    </div>
+  </fieldset>
+
+  <fieldset style="display:flex;flex-direction:column;min-height:0">
+    <legend>Contents (<span id="toc-total"></span>)</legend>
+    <div class="listview chaps" id="toc-list">
+      <div class="lvhead">
+        <span>No.</span><span>Chapter</span><span>Progress</span><span>%</span>
+      </div>
+      <div id="toc"></div>
+    </div>
+  </fieldset>
+</div>
+
+<div class="main hidden" id="desk">
+  <div class="pictoframe">
+    <span class="pictotab" id="pictotab"></span>
+    <div class="passagebox" id="passage"></div>
+  </div>
+  <div class="infobar hidden" id="codenote">
+    <span class="ico">i</span>
+    <span>This passage contains line breaks, copied as literal \n marks.
+      In MonkeyType's custom text box, tick <b>replace control characters</b>.</span>
+  </div>
+  <div class="hintrow">
+    <span><kbd>C</kbd>copy</span>
+    <span><kbd>Enter</kbd>done, next</span>
+    <span><kbd>&#9668;</kbd><kbd>&#9658;</kbd>back / skip</span>
+    <span><kbd>Esc</kbd>contents</span>
+  </div>
+</div>
+
+<div class="statusbar">
+  <span class="sunkencell" id="sb-pos">Ready</span>
+  <span class="sunkencell" id="sb-where"></span>
+  <span class="sunkencell grow" id="sb-msg"></span>
+  <span class="sunkencell" id="sb-len"></span>
+  <span class="grip" id="grip" title="Resize"></span>
+</div>
+
+<script>
+"use strict";
+const $ = id=>document.getElementById(id);
+const BOOK_DEFAULTS = {len:"medium", customWords:500, mode:"both",
+                       cursor:0, chWords:{}, done:{}, words:0};
+let API = null, S = null, BOOKS = [], DATA = null;
+const BOOK_CACHE = {};
+let chunks = [], cur = null;
+
+const B = ()=>S.books[S.current];
+
+/* ---------- chunking ---------- */
+const LEN = {short:60, medium:150, long:300, xl:600, chapter:1e9};
+const CODE_SPLIT = 40;
+const wc = t=>t.split(/\s+/).filter(Boolean).length;
+const sentences = t=>t.split(/(?<=[.!?:])\s+(?=["'(A-Z0-9])/).filter(s=>s.trim());
+const target = ()=>{
+  const b = B();
+  if(b.len==="custom") return Math.max(30, Math.min(1e6, b.customWords||500));
+  return LEN[b.len] || 150;
+};
+
+function buildChunks(){
+  const tgt = target(), glue = Math.round(tgt*0.45);
+  const mode = B().mode;
+  chunks = [];
+  const subCount = {};
+  let segs = [], w = 0, start = -1, ch = -1, sec = "", secStart = "";
+
+  const flush = ()=>{
+    if(!segs.length) return;
+    const prev = chunks[chunks.length-1];
+    if(w < glue && prev && prev.ch===ch){
+      for(const s of segs){
+        const last = prev.segs[prev.segs.length-1];
+        if(s.k==="p" && last.k==="p" && s.b===last.b) last.t += " " + s.t;
+        else prev.segs.push(s);
+      }
+      prev.words += w;
+      prev.hasCode = prev.hasCode || segs.some(s=>s.k==="c");
+    }else{
+      subCount[start] = (subCount[start]||0)+1;
+      chunks.push({segs, ch, sec:secStart, words:w, start,
+                   key:start+"."+subCount[start],
+                   hasCode:segs.some(s=>s.k==="c")});
+    }
+    segs = []; w = 0; start = -1;
+  };
+  const begin = i=>{ if(!segs.length){ start = i; secStart = sec; } };
+  const addProse = (i,s)=>{
+    begin(i);
+    const last = segs[segs.length-1];
+    if(last && last.k==="p" && last.b===i) last.t += " " + s;
+    else segs.push({k:"p", t:s, b:i});
+    w += wc(s);
+  };
+  const addCode = (i,t)=>{ begin(i); segs.push({k:"c", t}); w += wc(t); };
+
+  DATA.blocks.forEach((b,i)=>{
+    if(b.k==="h"){ sec = b.t; return; }
+    if(b.c !== ch){ flush(); ch = b.c; }
+    if(b.k==="p" && mode!=="code"){
+      for(const s of sentences(b.t)){
+        if(w >= tgt) flush();
+        addProse(i, s);
+      }
+    }else if(b.k==="c" && mode!=="prose"){
+      const lines = b.t.split("\n");
+      for(let a=0; a<lines.length; a+=CODE_SPLIT){
+        if(w >= tgt) flush();
+        addCode(i, lines.slice(a, a+CODE_SPLIT).join("\n"));
+      }
+    }
+  });
+  flush();
+  chunks.forEach((c,i)=>c.idx=i);
+}
+function chunkAt(cursor){
+  let idx = 0;
+  for(let i=0;i<chunks.length;i++){ if(chunks[i].start<=cursor) idx=i; else break; }
+  return idx;
+}
+const copyText = c=>{
+  if(!c.hasCode) return c.segs.map(s=>s.t).join(" ");
+  return c.segs.map(s=>s.t).join("\n")
+          .replace(/\\/g,"\\\\").replace(/\t/g,"    ").replace(/\n/g,"\\n");
+};
+
+/* ---------- chrome ---------- */
+function view(){ return !$("shelf").classList.contains("hidden") ? "shelf"
+              : !$("library").classList.contains("hidden") ? "library" : "desk"; }
+function updateChrome(){
+  const v = view();
+  $("tb-books").disabled = v==="shelf";
+  $("tb-contents").disabled = v==="shelf";
+  $("tb-copy").disabled = v!=="desk";
+  $("tb-done").disabled = v!=="desk";
+  $("tb-back").disabled = v!=="desk";
+  $("tb-skip").disabled = v!=="desk";
+  const b = S && S.current ? B() : null;
+  if(v==="desk" && cur){
+    $("sb-pos").textContent = "Passage "+(cur.idx+1)+" of "+chunks.length;
+    $("sb-where").textContent = "Ch "+cur.ch+": "+DATA.chapters[cur.ch-1].title;
+    $("sb-msg").textContent = cur.words.toLocaleString()+" words"+(cur.hasCode ? " (has line breaks)" : "");
+  }else if(v==="library" && DATA){
+    $("sb-pos").textContent = chunks.length.toLocaleString()+" passages";
+    $("sb-where").textContent = DATA.title;
+    $("sb-msg").textContent = "";
+  }else{
+    $("sb-pos").textContent = "Ready";
+    $("sb-where").textContent = BOOKS.length+" book"+(BOOKS.length===1?"":"s");
+    $("sb-msg").textContent = "";
+  }
+  $("sb-len").textContent = b ? ("Passage: "+(b.len==="custom" ? b.customWords+"w" : b.len)) : "";
+}
+
+/* ---------- shelf ---------- */
+function bookProgress(meta){
+  const p = S.books[meta.id];
+  if(!p || !meta.words) return 0;
+  return Math.min(100, Math.round(100*p.words/meta.words));
+}
+function renderShelf(){
+  const list = $("shelf-list"); list.innerHTML = "";
+  const head = document.createElement("div");
+  head.className = "lvhead";
+  head.innerHTML = "<span>Title</span><span>Size</span><span>Progress</span><span>%</span><span></span>";
+  list.appendChild(head);
+  BOOKS.forEach(meta=>{
+    const pct = bookProgress(meta);
+    const row = document.createElement("div");
+    row.className = "lvrow";
+    row.innerHTML =
+      '<span class="bt"></span><span class="bm"></span>'+
+      '<span class="pbar"><i style="width:'+pct+'%"></i></span>'+
+      '<span>'+(pct?pct+"%":"-")+'</span>';
+    row.querySelector(".bt").textContent =
+      meta.title + (meta.edition ? " ("+meta.edition+")" : "");
+    row.querySelector(".bm").textContent =
+      meta.chapters+" chapters, "+meta.words.toLocaleString()+" words";
+    const del = document.createElement("button");
+    del.className = "del";
+    del.innerHTML = meta.builtin ? "" : "&#215;";
+    del.title = "Remove book";
+    if(!meta.builtin) del.addEventListener("click", async e=>{
+      e.stopPropagation();
+      if(!confirm('Remove "'+meta.title+'" and its progress?')) return;
+      await API.delete_book(meta.id);
+      delete S.books[meta.id]; save();
+      BOOKS = await API.list_books();
+      renderShelf(); updateChrome();
+    });
+    row.appendChild(del);
+    row.addEventListener("click", ()=>openBook(meta.id));
+    list.appendChild(row);
+  });
+}
+async function addBook(){
+  const msg = $("importmsg");
+  msg.classList.remove("hidden");
+  msg.textContent = "Importing...";
+  const r = await API.import_book();
+  if(r.cancelled){ msg.classList.add("hidden"); return; }
+  if(r.error){ msg.textContent = "Could not import: "+r.error; return; }
+  msg.classList.add("hidden");
+  BOOKS = await API.list_books();
+  renderShelf();
+  openBook(r.meta.id);
+}
+
+/* ---------- library ---------- */
+async function openBook(id){
+  if(!BOOK_CACHE[id]) BOOK_CACHE[id] = await API.get_book(id);
+  DATA = BOOK_CACHE[id];
+  S.current = id;
+  if(!S.books[id]) S.books[id] = Object.assign({}, BOOK_DEFAULTS,
+      {chWords:{}, done:{}});
+  const meta = BOOKS.find(b=>b.id===id);
+  if(meta && !meta.hasCode) S.books[id].mode = "prose";
+  save();
+  buildChunks();
+  $("shelf").classList.add("hidden");
+  $("desk").classList.add("hidden");
+  $("library").classList.remove("hidden");
+  renderLibrary();
+}
+function chTotal(ch){
+  const mode = B().mode;
+  if(mode==="prose") return ch.pw;
+  if(mode==="code") return ch.cw;
+  return ch.pw + ch.cw;
+}
+function renderLibrary(){
+  const b = B();
+  $("book-title").textContent = DATA.title +
+    (DATA.edition ? " ("+DATA.edition+")" : "");
+  const meta = BOOKS.find(x=>x.id===S.current);
+  $("pref-mode").classList.toggle("hidden", !!(meta && !meta.hasCode));
+
+  $("st-words").textContent = b.words.toLocaleString();
+  $("st-passages").textContent = Object.keys(b.done).length.toLocaleString();
+  const grandAll = DATA.chapters.reduce((a,c)=>a+chTotal(c),0);
+  $("st-book").textContent = grandAll ? Math.min(100, Math.round(100*b.words/grandAll))+"%" : "0%";
+
+  const lenRadio = $("len-"+b.len);
+  if(lenRadio) lenRadio.checked = true;
+  $("customlen").value = b.len==="custom" ? b.customWords : "";
+  const modeRadio = $("mode-"+b.mode);
+  if(modeRadio) modeRadio.checked = true;
+
+  const c = chunks[chunkAt(b.cursor)];
+  const started = b.words > 0 || b.cursor > 0;
+  $("btn-continue").textContent = started ? "Continue" : "Begin";
+  $("continue-where").textContent = c ? "Ch "+c.ch+": "+(c.sec||DATA.chapters[c.ch-1].title) : "";
+
+  const toc = $("toc"); toc.innerHTML = "";
+  DATA.chapters.forEach(ch=>{
+    const total = chTotal(ch);
+    const done = Math.min(b.chWords[ch.n]||0, total);
+    const pct = total ? Math.round(100*done/total) : 0;
+    const row = document.createElement("button");
+    row.className = "lvrow" + (c && c.ch===ch.n ? " here" : "");
+    row.innerHTML = '<span class="num">'+ch.n+'</span><span class="t"></span>'+
+      '<span class="pbar"><i style="width:'+pct+'%"></i></span>'+
+      '<span>'+(pct?pct+"%":"-")+'</span>';
+    row.querySelector(".t").textContent = ch.title;
+    row.addEventListener("click", ()=>{
+      const first = chunks.find(x=>x.ch===ch.n);
+      if(first) openPassage(first.idx);
+    });
+    toc.appendChild(row);
+  });
+  $("toc-total").textContent = chunks.length.toLocaleString()+" passages, "+
+    grandAll.toLocaleString()+" words";
+  updateChrome();
+}
+
+/* ---------- passage ---------- */
+function openPassage(idx, autocopy){
+  if(idx < 0) idx = 0;
+  if(idx >= chunks.length) idx = chunks.length-1;
+  cur = chunks[idx];
+  B().cursor = cur.start; save();
+  $("library").classList.add("hidden");
+  $("shelf").classList.add("hidden");
+  $("desk").classList.remove("hidden");
+  const inCh = chunks.filter(x=>x.ch===cur.ch);
+  $("pictotab").textContent = "Ch "+cur.ch+" - "+
+    (cur.sec || DATA.chapters[cur.ch-1].title)+
+    "  ("+(inCh.indexOf(cur)+1)+"/"+inCh.length+" in chapter)";
+  const p = $("passage");
+  p.innerHTML = "";
+  for(const s of cur.segs){
+    const el = document.createElement(s.k==="c" ? "pre" : "p");
+    el.textContent = s.t;
+    p.appendChild(el);
+  }
+  p.scrollTop = 0;
+  $("codenote").classList.toggle("hidden", !cur.hasCode);
+  updateChrome();
+  if(autocopy !== false) copyCur();
+}
+let copyTimer = null;
+function copyCur(){
+  if(!cur || !API) return;
+  API.copy(copyText(cur)).then(ok=>{
+    $("sb-msg").textContent = ok
+      ? "Copied to clipboard - paste into MonkeyType"
+      : "Copy failed";
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(updateChrome, 2500);
+  });
+}
+function markDone(){
+  if(!cur) return;
+  const b = B();
+  if(!b.done[cur.key]){
+    b.done[cur.key] = 1;
+    b.words += cur.words;
+    b.chWords[cur.ch] = (b.chWords[cur.ch]||0) + cur.words;
+  }
+  if(cur.idx+1 < chunks.length) openPassage(cur.idx+1);
+  else showLibrary();
+  save();
+}
+function showLibrary(){
+  $("desk").classList.add("hidden");
+  $("shelf").classList.add("hidden");
+  $("library").classList.remove("hidden");
+  renderLibrary();
+}
+function showShelf(){
+  $("library").classList.add("hidden");
+  $("desk").classList.add("hidden");
+  $("shelf").classList.remove("hidden");
+  renderShelf();
+  updateChrome();
+}
+
+/* ---------- state ---------- */
+function save(){ if(API) API.save_state(S); }
+function migrate(raw){
+  if(!raw) return {current:null, books:{}};
+  if(raw.books) return raw;
+  const old = Object.assign({}, BOOK_DEFAULTS, raw);
+  if(!LEN[old.len] && old.len!=="custom") old.len = "medium";
+  return {current:"pcc3", books:{pcc3:{
+    len:old.len, customWords:old.customWords||500, mode:old.mode||"both",
+    cursor:old.cursor||0, chWords:old.chWords||{}, done:old.done||{},
+    words:old.words||0}}};
+}
+
+/* ---------- wiring ---------- */
+$("btn-add").addEventListener("click", addBook);
+$("tb-books").addEventListener("click", showShelf);
+$("tb-contents").addEventListener("click", showLibrary);
+$("tb-copy").addEventListener("click", copyCur);
+$("tb-done").addEventListener("click", markDone);
+$("tb-back").addEventListener("click", ()=>cur && openPassage(cur.idx-1));
+$("tb-skip").addEventListener("click", ()=>cur && openPassage(cur.idx+1));
+$("btn-continue").addEventListener("click", ()=>openPassage(chunkAt(B().cursor)));
+$("tb-mt").addEventListener("click", ()=>API && API.open_url("https://monkeytype.com"));
+document.querySelectorAll('input[name=len]').forEach(r=>r.addEventListener("change", ()=>{
+  if(!r.checked) return;
+  const b = B();
+  b.len = r.value;
+  if(r.value==="custom"){
+    const v = parseInt($("customlen").value, 10);
+    b.customWords = v ? Math.max(30, Math.min(1e6, v)) : b.customWords;
+  }
+  save(); buildChunks(); renderLibrary();
+}));
+$("customlen").addEventListener("change", ()=>{
+  const v = parseInt($("customlen").value, 10);
+  if(!v) return;
+  const b = B();
+  b.len = "custom";
+  b.customWords = Math.max(30, Math.min(1e6, v));
+  $("len-custom").checked = true;
+  save(); buildChunks(); renderLibrary();
+});
+document.querySelectorAll('input[name=mode]').forEach(r=>r.addEventListener("change", ()=>{
+  if(!r.checked) return;
+  B().mode = r.value; save(); buildChunks(); renderLibrary();
+}));
+/* window controls (frameless chrome) */
+$("win-min").addEventListener("click", ()=>API && API.win_minimize());
+$("win-max").addEventListener("click", ()=>API && API.win_toggle_max());
+$("win-close").addEventListener("click", ()=>API && API.win_close());
+$("titledrag").addEventListener("dblclick", ()=>API && API.win_toggle_max());
+(function(){
+  const grip = $("grip");
+  let sx = 0, sy = 0, pending = false, dw = 0, dh = 0;
+  const flushResize = ()=>{
+    pending = false;
+    if(API && (dw || dh)){ API.win_resize_by(dw, dh); dw = 0; dh = 0; }
+  };
+  grip.addEventListener("pointerdown", e=>{
+    grip.setPointerCapture(e.pointerId);
+    sx = e.screenX; sy = e.screenY;
+  });
+  grip.addEventListener("pointermove", e=>{
+    if(!grip.hasPointerCapture || !grip.hasPointerCapture(e.pointerId)) return;
+    dw += (e.screenX - sx) * devicePixelRatio;
+    dh += (e.screenY - sy) * devicePixelRatio;
+    sx = e.screenX; sy = e.screenY;
+    if(!pending){ pending = true; setTimeout(flushResize, 40); }
+  });
+})();
+
+document.addEventListener("keydown", e=>{
+  if(view()!=="desk") return;
+  if(e.ctrlKey || e.altKey || e.metaKey) return;
+  if(e.key==="Escape"){ e.preventDefault(); showLibrary(); }
+  else if(e.key==="Enter"){ e.preventDefault(); markDone(); }
+  else if(e.key==="c" || e.key==="C"){ e.preventDefault(); copyCur(); }
+  else if(e.key==="ArrowLeft"){ e.preventDefault(); if(cur) openPassage(cur.idx-1); }
+  else if(e.key==="ArrowRight"){ e.preventDefault(); if(cur) openPassage(cur.idx+1); }
+});
+
+/* ---------- boot ---------- */
+async function init(){
+  if(S) return;
+  API = window.pywebview.api;
+  S = migrate(await API.get_state());
+  BOOKS = await API.list_books();
+  if(S.current && S.books[S.current] && BOOKS.some(b=>b.id===S.current)){
+    await openBook(S.current);
+  }else{
+    renderShelf(); updateChrome();
+  }
+}
+window.addEventListener("pywebviewready", init);
+if(window.pywebview) init();
+</script>
+</body>
+</html>
