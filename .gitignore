@@ -13,6 +13,3 @@ typing/app/*.spec
 # Local user data / caches
 typing/state.json
 __pycache__/
-
-# Local Claude Code instructions - not for the repo
-CLAUDE.md

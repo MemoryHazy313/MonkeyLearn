@@ -19,24 +19,36 @@ around the text you are about to type.
 
 ## How to use it
 
-1. Start `MonkeyLearn.exe`. Your bookshelf opens; click a book (or **Add Book...** to
-   import your own - EPUB, PDF, and TXT are supported, parsed entirely on your machine).
+1. Start MonkeyLearn. Click a book on the shelf, or **Add Book...** to import your
+   own - EPUB, PDF, and TXT are supported, parsed entirely on your machine.
 2. Pick a passage length: Short (60 words), Medium (150), Long (300), XL (600),
    Whole chapter, or a custom word count. Pick content: Prose, Code, or Everything
    (the toggle hides itself for books with no code).
 3. Press **Begin**. The first passage is already on your clipboard.
-4. On monkeytype.com: mode `custom` -> wrench icon -> paste -> uncheck **random**, set
-   word count to `all` -> save. Type it.
-5. Back in the app, **Done, next** (or Enter) records your progress and puts the next
-   passage on the clipboard. That is the whole loop.
+4. Set up MonkeyType (once per session):
+   - On [monkeytype.com](https://monkeytype.com), pick **custom** in the mode bar
+     above the words, then click **change** - the custom text editor opens.
+   - Paste the passage (Ctrl+V).
+   - Turn **off** any shuffle/randomize option so the text stays in book order,
+     and leave the word limit empty so the whole passage is used.
+   - If the passage has line breaks (code), enable **replace control characters** -
+     MonkeyLearn copies line breaks as literal `\n` marks, and this setting turns
+     them back into real line breaks. The app reminds you when a passage needs it.
+   - Confirm, and type.
+5. Back in MonkeyLearn, press **Done, next** (or Enter): your progress is recorded
+   and the next passage is already on the clipboard. Paste it into the same custom
+   text editor and keep going - that is the whole loop.
 
-If a passage contains line breaks (code listings), it is copied with them written as
-literal `\n` and the app shows a reminder: tick **replace control characters** in
-MonkeyType's custom text box and the line breaks come back. Plain prose copies clean.
+Tip: MonkeyType's custom text editor can also **save** a text under a name (the
+"saved texts" list). Saving a chapter there is handy when you want to retype it
+for speed later without touching your reading position in MonkeyLearn.
 
-Shortcuts: `C` copy again, `Enter` done + next, arrow keys back/skip, `Esc` contents.
-The window is drawn by the app itself - drag it by the blue title bar, resize with the
-grip in the bottom-right corner.
+Skip moves past a passage without counting it; Done is what records progress.
+
+Shortcuts on the passage view: `C` copy again, `Enter` done + next, Left/Right
+back/skip, Up/Down and PgUp/PgDn scroll the text, `Esc` contents.
+The window is drawn by the app itself - drag it by the blue title bar, resize with
+the grip in the bottom-right corner.
 
 ## How it works
 
@@ -107,6 +119,13 @@ The app draws its own window frame; if your window manager handles frameless
 windows poorly, set `MONKEYLEARN_SYSTEM_FRAME=1` to use the normal OS frame
 instead. A Linux binary can be built with PyInstaller on a Linux machine using
 the same command as the Windows build.
+
+## License
+
+MIT - see [LICENSE](LICENSE). Theme palettes belong to the
+[MonkeyType](https://github.com/monkeytypegame/monkeytype) project and its
+contributors. MonkeyLearn is an independent companion tool, not affiliated with
+MonkeyType.
 
 ## Roadmap
 

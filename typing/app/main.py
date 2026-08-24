@@ -35,14 +35,6 @@ APP_DIR = os.path.join(_BASE, "MonkeyLearn")
 STATE_FILE = os.path.join(APP_DIR, "state.json")
 BOOKS_DIR = os.path.join(APP_DIR, "books")
 
-# the app was previously named Copywork - carry existing progress over once
-_OLD_DIR = os.path.join(_BASE, "Copywork")
-if os.path.isdir(_OLD_DIR) and not os.path.isdir(APP_DIR):
-    try:
-        os.rename(_OLD_DIR, APP_DIR)
-    except OSError:
-        pass
-
 window = None
 maximized = False
 

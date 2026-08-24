@@ -1,9 +1,9 @@
-import time, os, json, sys
+import time, os, json, sys, tempfile
 import webview
 from PIL import ImageGrab
 import main as appmod
 
-OUT = r"C:\Users\solom\AppData\Local\Temp\claude\E--Matthes-Eric---Python-Crash-Course--3rd-Edition---2023\69dbcf24-2c47-4193-85ab-2e182b18f7e3\scratchpad"
+OUT = os.path.join(tempfile.gettempdir(), "monkeylearn-shots")
 os.makedirs(OUT, exist_ok=True)
 
 # protect the user's real progress during the run
