@@ -20,7 +20,7 @@ around the text you are about to type.
 ## How to use it
 
 1. Start `MonkeyLearn.exe`. Your bookshelf opens; click a book (or **Add Book...** to
-   import your own - EPUB and TXT are supported, parsed entirely on your machine).
+   import your own - EPUB, PDF, and TXT are supported, parsed entirely on your machine).
 2. Pick a passage length: Short (60 words), Medium (150), Long (300), XL (600),
    Whole chapter, or a custom word count. Pick content: Prose, Code, or Everything
    (the toggle hides itself for books with no code).
@@ -46,6 +46,13 @@ listings) and stored as JSON in `%APPDATA%\MonkeyLearn\books\`:
 - **EPUB**: the app reads the book's own manifest for reading order and its table of
   contents for chapter names. Figures, captions, and tables are dropped; typographic
   characters are normalized to plain ASCII so every character is typeable.
+- **PDF**: chapters come from the PDF's own outline (bookmarks), drilling past
+  "Part I"-style groupings to the real chapter level; running headers, footers, and
+  page numbers are stripped by detecting lines that repeat across pages; hard-wrapped
+  lines are rebuilt into paragraphs and hyphenated words rejoined. Scanned PDFs
+  without a text layer are rejected with a pointer to OCR tools rather than
+  imported as garbage. Extraction quality still varies with how the PDF was made -
+  prefer EPUB when you have both.
 - **TXT**: paragraphs split on blank lines; lines like "Chapter 5" become chapter
   breaks, and books without them are cut into navigable parts.
 
@@ -62,7 +69,7 @@ Progress lives in `%APPDATA%\MonkeyLearn\state.json`. Nothing ever leaves your c
 Requires Python 3.12+ on Windows with WebView2 (preinstalled on Windows 11).
 
 ```
-pip install pywebview pyperclip pyinstaller
+pip install pywebview pyperclip pypdf pyinstaller
 cd typing/app
 python make_data.py        # builds the bundled starter book (see note)
 python main.py             # run from source
@@ -73,10 +80,27 @@ Note: no book text ships in this repository. `make_data.py` generates the bundle
 starter book from an EPUB you place in the repository root; any books you actually
 read are imported through the app's own **Add Book...** dialog.
 
+## Running on Linux
+
+The code is portable (config lives in `~/.config/MonkeyLearn` on Linux,
+`%APPDATA%\MonkeyLearn` on Windows), but so far it has only been tested on
+Windows 11 - reports welcome. To run from source on Linux you need:
+
+- GTK WebKit for pywebview: `sudo apt install python3-gi gir1.2-webkit2-4.1`
+  (or use the Qt backend: `pip install pywebview[qt]`)
+- A clipboard helper for pyperclip: `sudo apt install xclip` (X11) or
+  `wl-clipboard` (Wayland)
+- Then: `pip install pywebview pyperclip pypdf` and `python3 typing/app/main.py`
+
+The app draws its own window frame; if your window manager handles frameless
+windows poorly, set `MONKEYLEARN_SYSTEM_FRAME=1` to use the normal OS frame
+instead. A Linux binary can be built with PyInstaller on a Linux machine using
+the same command as the Windows build.
+
 ## Roadmap
 
 This README grows with the project.
 
-- [ ] PDF import (text-based PDFs, using the PDF outline for chapters)
 - [ ] Make the bundled starter book optional so the app builds with an empty shelf
 - [ ] Packaged releases
+- [ ] Verify and polish Linux support (currently untested)

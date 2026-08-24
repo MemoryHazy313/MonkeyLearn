@@ -5,7 +5,7 @@ It holds your books, hands you passages, and keeps a bookmark per book; the
 typing itself happens on the official monkeytype.com.
 
 Python Crash Course is built in. **Add a book** on the shelf screen imports any
-EPUB or TXT file (parsed locally, stored in `%APPDATA%\MonkeyLearn\books`).
+EPUB, PDF, or TXT file (parsed locally, stored in `%APPDATA%\MonkeyLearn\books`).
 
 ## Using it
 

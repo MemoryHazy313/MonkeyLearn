@@ -276,10 +276,14 @@ def parse_book(path):
     ext = os.path.splitext(path)[1].lower()
     if ext == ".epub":
         data = parse_epub(path)
+    elif ext == ".pdf":
+        from pdfparse import parse_pdf
+        data = parse_pdf(path)
     elif ext in (".txt", ".md"):
         data = parse_txt(path)
     else:
-        raise ValueError("Unsupported file type: %s (use .epub or .txt)" % ext)
+        raise ValueError(
+            "Unsupported file type: %s (use .epub, .pdf, or .txt)" % ext)
     slug = re.sub(r"[^a-z0-9]+", "-", data["title"].lower()).strip("-")[:40]
     with open(path, "rb") as f:
         digest = hashlib.md5(f.read()).hexdigest()[:6]

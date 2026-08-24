@@ -12,8 +12,8 @@
   --green1:#8DD264; --green2:#3FA435;
   --info:#FFFFE1; --infoborder:#B5B588;
   --picto:#5A7EDC;
-  --ui:Tahoma,"Segoe UI",Arial,sans-serif;
-  --book:"Times New Roman",Georgia,serif;
+  --ui:Tahoma,"Segoe UI","Liberation Sans","DejaVu Sans",Arial,sans-serif;
+  --book:"Times New Roman","Liberation Serif",Georgia,serif;
   --code:"Lucida Console",Consolas,monospace;
   --raised:inset -1px -1px var(--frame), inset 1px 1px var(--hilite),
            inset -2px -2px var(--shadow), inset 2px 2px var(--btnface);
@@ -211,7 +211,8 @@ kbd{
     linear-gradient(135deg, transparent 0 25%, var(--hilite) 25% 37.5%, var(--shadow) 37.5% 50%,
       transparent 50% 75%, var(--hilite) 75% 87.5%, var(--shadow) 87.5%);
 }
-.importmsg{margin-top:8px; color:#C00}
+.importmsg{margin-top:8px; color:#333}
+.importmsg.err{color:#C00}
 @media (prefers-reduced-motion:reduce){ *{transition:none !important} }
 </style>
 </head>
@@ -247,7 +248,7 @@ kbd{
     <div class="listview books" id="shelf-list"></div>
     <div class="fieldrow" style="margin-top:8px">
       <button class="btn" id="btn-add">Add Book...</button>
-      <span style="color:#555">EPUB or TXT, parsed on this computer only</span>
+      <span style="color:#555">EPUB, PDF, or TXT - parsed on this computer only. Heads-up: PDFs often import less cleanly (layout quirks); prefer EPUB when you have both.</span>
     </div>
     <p class="importmsg hidden" id="importmsg"></p>
   </fieldset>
@@ -484,12 +485,17 @@ function renderShelf(){
 }
 async function addBook(){
   const msg = $("importmsg");
-  msg.classList.remove("hidden");
-  msg.textContent = "Importing...";
+  msg.classList.remove("hidden","err");
+  msg.textContent = "Importing... (a large PDF can take a minute)";
   const r = await API.import_book();
   if(r.cancelled){ msg.classList.add("hidden"); return; }
-  if(r.error){ msg.textContent = "Could not import: "+r.error; return; }
-  msg.classList.add("hidden");
+  if(r.error){ msg.classList.add("err"); msg.textContent = "Could not import: "+r.error; return; }
+  if(r.notes && r.notes.length){
+    msg.classList.remove("err");
+    msg.textContent = "Imported. " + r.notes.join("; ") + ".";
+  }else{
+    msg.classList.add("hidden");
+  }
   BOOKS = await API.list_books();
   renderShelf();
   openBook(r.meta.id);
@@ -711,11 +717,8 @@ async function init(){
   API = window.pywebview.api;
   S = migrate(await API.get_state());
   BOOKS = await API.list_books();
-  if(S.current && S.books[S.current] && BOOKS.some(b=>b.id===S.current)){
-    await openBook(S.current);
-  }else{
-    renderShelf(); updateChrome();
-  }
+  // always start on the bookshelf; progress is picked up when a book is opened
+  renderShelf(); updateChrome();
 }
 window.addEventListener("pywebviewready", init);
 if(window.pywebview) init();

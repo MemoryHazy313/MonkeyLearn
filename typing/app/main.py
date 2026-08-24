@@ -21,13 +21,22 @@ def res_path(name):
     return os.path.join(base, name)
 
 
-_APPDATA = os.environ.get("APPDATA", os.path.expanduser("~"))
-APP_DIR = os.path.join(_APPDATA, "MonkeyLearn")
+def _config_base():
+    if sys.platform == "win32":
+        return os.environ.get("APPDATA", os.path.expanduser("~"))
+    if sys.platform == "darwin":
+        return os.path.expanduser("~/Library/Application Support")
+    return os.environ.get("XDG_CONFIG_HOME",
+                          os.path.expanduser("~/.config"))
+
+
+_BASE = _config_base()
+APP_DIR = os.path.join(_BASE, "MonkeyLearn")
 STATE_FILE = os.path.join(APP_DIR, "state.json")
 BOOKS_DIR = os.path.join(APP_DIR, "books")
 
 # the app was previously named Copywork - carry existing progress over once
-_OLD_DIR = os.path.join(_APPDATA, "Copywork")
+_OLD_DIR = os.path.join(_BASE, "Copywork")
 if os.path.isdir(_OLD_DIR) and not os.path.isdir(APP_DIR):
     try:
         os.rename(_OLD_DIR, APP_DIR)
@@ -82,17 +91,18 @@ class Api:
             if path is None:
                 picked = window.create_file_dialog(
                     webview.OPEN_DIALOG,
-                    file_types=("Books (*.epub;*.txt;*.md)",
+                    file_types=("Books (*.epub;*.pdf;*.txt;*.md)",
                                 "All files (*.*)"))
                 if not picked:
                     return {"cancelled": True}
                 path = picked[0]
             data = bookparse.parse_book(path)
+            notes = data.pop("notes", [])
             os.makedirs(BOOKS_DIR, exist_ok=True)
             out = os.path.join(BOOKS_DIR, data["id"] + ".json")
             with open(out, "w", encoding="utf-8") as f:
                 json.dump(data, f, ensure_ascii=True, separators=(",", ":"))
-            return {"meta": _book_meta(data)}
+            return {"meta": _book_meta(data), "notes": notes}
         except Exception as e:
             return {"error": str(e)}
 
@@ -168,12 +178,21 @@ def main():
     global window
     with open(res_path("ui.html"), encoding="utf-8") as f:
         html = f.read()
+    # Escape hatch for platforms where frameless windows misbehave
+    # (some Linux window managers): use the OS frame instead.
+    system_frame = bool(os.environ.get("MONKEYLEARN_SYSTEM_FRAME"))
     window = webview.create_window(
         "MonkeyLearn", html=html, js_api=Api(),
         width=1000, height=800, min_size=(700, 540),
         background_color="#ECE9D8",
-        frameless=True, easy_drag=False,
+        frameless=not system_frame, easy_drag=False,
     )
+    if system_frame:
+        def hide_custom_chrome():
+            window.evaluate_js(
+                "document.querySelector('.titlebar').style.display='none';"
+                "document.getElementById('grip').style.display='none';")
+        window.events.loaded += hide_custom_chrome
     webview.start()
 
 
